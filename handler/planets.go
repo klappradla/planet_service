@@ -1,11 +1,11 @@
 package handler
 
 import (
-  "io/ioutil"
-  "fmt"
   "encoding/json"
 
 	"gopkg.in/gin-gonic/gin.v1"
+
+  "github.com/klappradla/planet_service/data"
 )
 
 type Planet struct {
@@ -21,11 +21,11 @@ type Planet struct {
 }
 
 func Planets(c *gin.Context) {
-  data, _ := ioutil.ReadFile("./planets.json")
-  var animals []Planet
-  err := json.Unmarshal(data, &animals)
+  var planets []Planet
+  err := json.Unmarshal(data.Planets(), &planets)
   if err != nil {
-    fmt.Println("error:", err)
+    c.AbortWithError(500, err)
+    return
   }
-  c.JSON(200, animals)
+  c.JSON(200, planets)
 }
